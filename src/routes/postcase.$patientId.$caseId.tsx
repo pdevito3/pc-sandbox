@@ -1,13 +1,16 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import toast from "react-hot-toast";
 import { useCase } from "../domain/cases/apis/get-case";
+import { useUpdateCase } from "../domain/cases/apis/update-case";
 import { CaseForm, CaseFormData } from "../domain/cases/components/case-form";
 import { useDisease } from "../domain/diseases/apis/get-disease";
+import { useUpdateDisease } from "../domain/diseases/apis/update-disease";
 import {
   DiseaseForm,
   DiseaseFormData,
 } from "../domain/diseases/components/disease-form";
 import { usePatient } from "../domain/patients/apis/get-patient";
+import { useUpdatePatient } from "../domain/patients/apis/update-patient";
 import {
   PatientFormData,
   PatientPostCaseForm,
@@ -28,25 +31,38 @@ function PostCaseEditComponent() {
     diseaseId: caseId,
   });
 
+  const updatePatient = useUpdatePatient();
+  const updateCase = useUpdateCase();
+  const updateDisease = useUpdateDisease();
+
   const handlePatientSubmit = async (data: { patient: PatientFormData }) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    toast.success(
-      `Patient data autosaved successfully!\n\n${JSON.stringify(data.patient, null, 2)}`
-    );
+    try {
+      await updatePatient.mutateAsync({
+        id: patientId!,
+        patient: data.patient,
+      });
+      toast.success(`Patient data updated successfully!`);
+    } catch (error) {
+      toast.error(`Failed to update patient data: ${error.message}`);
+    }
   };
 
   const handleCaseSubmit = async (data: CaseFormData) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    toast.success(
-      `Case data autosaved successfully!\n\n${JSON.stringify(data, null, 2)}`
-    );
+    try {
+      await updateCase.mutateAsync({ id: caseId!, case: data });
+      toast.success(`Case data updated successfully!`);
+    } catch (error) {
+      toast.error(`Failed to update case data: ${error.message}`);
+    }
   };
 
   const handleDiseaseSubmit = async (data: DiseaseFormData) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    toast.success(
-      `Disease data autosaved successfully!\n\n${JSON.stringify(data, null, 2)}`
-    );
+    try {
+      await updateDisease.mutateAsync({ id: caseId!, disease: data });
+      toast.success(`Disease data updated successfully!`);
+    } catch (error) {
+      toast.error(`Failed to update disease data: ${error.message}`);
+    }
   };
 
   if (isLoadingPatient || isLoadingCase || isLoadingDisease) {

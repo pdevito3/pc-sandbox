@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import toast from "react-hot-toast";
+import { useCreateCase } from "../domain/cases/apis/create-case";
 import { CaseForm, CaseFormData } from "../domain/cases/components/case-form";
+import { useCreateDisease } from "../domain/diseases/apis/create-disease";
 import {
   DiseaseForm,
   DiseaseFormData,
 } from "../domain/diseases/components/disease-form";
+import { useCreatePatient } from "../domain/patients/apis/create-patient";
 import {
   PatientFormData,
   PatientPostCaseForm,
@@ -16,18 +19,35 @@ export const Route = createFileRoute("/postcase/")({
 });
 
 function PostCaseComponent() {
-  const handlePatientSubmit = (data: { patient: PatientFormData }) => {
-    toast.success(
-      `Autosaved Patient data: ${JSON.stringify(data.patient, null, 2)}`
-    );
+  const createPatient = useCreatePatient();
+  const createCase = useCreateCase();
+  const createDisease = useCreateDisease();
+
+  const handlePatientSubmit = async (data: { patient: PatientFormData }) => {
+    try {
+      await createPatient.mutateAsync(data.patient);
+      toast.success(`Patient data saved successfully!`);
+    } catch (error) {
+      toast.error(`Failed to save patient data: ${error.message}`);
+    }
   };
 
-  const handleCaseSubmit = (data: CaseFormData) => {
-    toast.success(`Autosaved Case data: ${JSON.stringify(data, null, 2)}`);
+  const handleCaseSubmit = async (data: CaseFormData) => {
+    try {
+      await createCase.mutateAsync(data);
+      toast.success(`Case data saved successfully!`);
+    } catch (error) {
+      toast.error(`Failed to save case data: ${error.message}`);
+    }
   };
 
-  const handleDiseaseSubmit = (data: DiseaseFormData) => {
-    toast.success(`Autosaved Disease data: ${JSON.stringify(data, null, 2)}`);
+  const handleDiseaseSubmit = async (data: DiseaseFormData) => {
+    try {
+      await createDisease.mutateAsync(data);
+      toast.success(`Disease data saved successfully!`);
+    } catch (error) {
+      toast.error(`Failed to save disease data: ${error.message}`);
+    }
   };
 
   return (
