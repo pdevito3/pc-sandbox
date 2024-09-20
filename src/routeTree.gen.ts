@@ -14,7 +14,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as PostcaseIndexImport } from './routes/postcase.index'
-import { Route as PostcaseEmrImport } from './routes/postcase.emr'
+import { Route as PostcaseEmrintakeImport } from './routes/postcase.emrintake'
+import { Route as PostcaseAddfromemrIdentifierImport } from './routes/postcase.addfromemr.$identifier'
 import { Route as PostcasePatientIdCaseIdImport } from './routes/postcase.$patientId.$caseId'
 
 // Create/Update Routes
@@ -34,10 +35,16 @@ const PostcaseIndexRoute = PostcaseIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const PostcaseEmrRoute = PostcaseEmrImport.update({
-  path: '/postcase/emr',
+const PostcaseEmrintakeRoute = PostcaseEmrintakeImport.update({
+  path: '/postcase/emrintake',
   getParentRoute: () => rootRoute,
 } as any)
+
+const PostcaseAddfromemrIdentifierRoute =
+  PostcaseAddfromemrIdentifierImport.update({
+    path: '/postcase/addfromemr/$identifier',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 const PostcasePatientIdCaseIdRoute = PostcasePatientIdCaseIdImport.update({
   path: '/postcase/$patientId/$caseId',
@@ -62,11 +69,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/postcase/emr': {
-      id: '/postcase/emr'
-      path: '/postcase/emr'
-      fullPath: '/postcase/emr'
-      preLoaderRoute: typeof PostcaseEmrImport
+    '/postcase/emrintake': {
+      id: '/postcase/emrintake'
+      path: '/postcase/emrintake'
+      fullPath: '/postcase/emrintake'
+      preLoaderRoute: typeof PostcaseEmrintakeImport
       parentRoute: typeof rootRoute
     }
     '/postcase/': {
@@ -83,6 +90,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostcasePatientIdCaseIdImport
       parentRoute: typeof rootRoute
     }
+    '/postcase/addfromemr/$identifier': {
+      id: '/postcase/addfromemr/$identifier'
+      path: '/postcase/addfromemr/$identifier'
+      fullPath: '/postcase/addfromemr/$identifier'
+      preLoaderRoute: typeof PostcaseAddfromemrIdentifierImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -91,26 +105,29 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/postcase/emr': typeof PostcaseEmrRoute
+  '/postcase/emrintake': typeof PostcaseEmrintakeRoute
   '/postcase': typeof PostcaseIndexRoute
   '/postcase/$patientId/$caseId': typeof PostcasePatientIdCaseIdRoute
+  '/postcase/addfromemr/$identifier': typeof PostcaseAddfromemrIdentifierRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/postcase/emr': typeof PostcaseEmrRoute
+  '/postcase/emrintake': typeof PostcaseEmrintakeRoute
   '/postcase': typeof PostcaseIndexRoute
   '/postcase/$patientId/$caseId': typeof PostcasePatientIdCaseIdRoute
+  '/postcase/addfromemr/$identifier': typeof PostcaseAddfromemrIdentifierRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/postcase/emr': typeof PostcaseEmrRoute
+  '/postcase/emrintake': typeof PostcaseEmrintakeRoute
   '/postcase/': typeof PostcaseIndexRoute
   '/postcase/$patientId/$caseId': typeof PostcasePatientIdCaseIdRoute
+  '/postcase/addfromemr/$identifier': typeof PostcaseAddfromemrIdentifierRoute
 }
 
 export interface FileRouteTypes {
@@ -118,40 +135,45 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/postcase/emr'
+    | '/postcase/emrintake'
     | '/postcase'
     | '/postcase/$patientId/$caseId'
+    | '/postcase/addfromemr/$identifier'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/postcase/emr'
+    | '/postcase/emrintake'
     | '/postcase'
     | '/postcase/$patientId/$caseId'
+    | '/postcase/addfromemr/$identifier'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/postcase/emr'
+    | '/postcase/emrintake'
     | '/postcase/'
     | '/postcase/$patientId/$caseId'
+    | '/postcase/addfromemr/$identifier'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  PostcaseEmrRoute: typeof PostcaseEmrRoute
+  PostcaseEmrintakeRoute: typeof PostcaseEmrintakeRoute
   PostcaseIndexRoute: typeof PostcaseIndexRoute
   PostcasePatientIdCaseIdRoute: typeof PostcasePatientIdCaseIdRoute
+  PostcaseAddfromemrIdentifierRoute: typeof PostcaseAddfromemrIdentifierRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  PostcaseEmrRoute: PostcaseEmrRoute,
+  PostcaseEmrintakeRoute: PostcaseEmrintakeRoute,
   PostcaseIndexRoute: PostcaseIndexRoute,
   PostcasePatientIdCaseIdRoute: PostcasePatientIdCaseIdRoute,
+  PostcaseAddfromemrIdentifierRoute: PostcaseAddfromemrIdentifierRoute,
 }
 
 export const routeTree = rootRoute
@@ -168,9 +190,10 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/postcase/emr",
+        "/postcase/emrintake",
         "/postcase/",
-        "/postcase/$patientId/$caseId"
+        "/postcase/$patientId/$caseId",
+        "/postcase/addfromemr/$identifier"
       ]
     },
     "/": {
@@ -179,14 +202,17 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.tsx"
     },
-    "/postcase/emr": {
-      "filePath": "postcase.emr.tsx"
+    "/postcase/emrintake": {
+      "filePath": "postcase.emrintake.tsx"
     },
     "/postcase/": {
       "filePath": "postcase.index.tsx"
     },
     "/postcase/$patientId/$caseId": {
       "filePath": "postcase.$patientId.$caseId.tsx"
+    },
+    "/postcase/addfromemr/$identifier": {
+      "filePath": "postcase.addfromemr.$identifier.tsx"
     }
   }
 }

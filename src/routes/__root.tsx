@@ -48,12 +48,12 @@ function RootComponent() {
           Edit A Case
         </Link>
         <Link
-          to="/postcase/emr"
+          to="/postcase/emrintake"
           activeProps={{
             className: "font-bold",
           }}
         >
-          Seed From EMR
+          EMR Intake
         </Link>
       </div>
       <hr />

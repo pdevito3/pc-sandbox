@@ -12,7 +12,7 @@ function PostCaseComponent() {
   };
   return (
     <div className="p-2">
-      <h3>Post Case</h3>
+      <h3 className="text-2xl font-bold">Post Case</h3>
 
       <div className="pt-10">
         <PatientPostCaseForm onSubmit={handlePatientSubmit} />
