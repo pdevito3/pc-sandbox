@@ -9,10 +9,7 @@ import {
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
 import { FormStatusCard } from "../domain/postcase/form-status-card";
-import {
-  PostCaseSideBarProvider,
-  usePostCaseSideBar,
-} from "../domain/postcase/postcase-sidebar";
+import { usePostCaseSideBar } from "../domain/postcase/postcase-sidebar";
 
 export const Route = createFileRoute("/postcase/")({
   component: PostCaseComponent,
@@ -23,9 +20,7 @@ function PostCaseComponent() {
     <div className="p-8">
       <h3 className="text-2xl font-bold mb-6">Post Case</h3>
 
-      <PostCaseSideBarProvider>
-        <PostCaseView />
-      </PostCaseSideBarProvider>
+      <PostCaseView />
     </div>
   );
 }
