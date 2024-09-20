@@ -13,11 +13,11 @@ interface FormStatusCardProps {
 }
 
 export function FormStatusCard({ isLoading }: FormStatusCardProps) {
-  const { sideBarStates, isPageValid } = usePostCaseSideBar();
+  const { sideBarSectionStates, isPageValid } = usePostCaseSideBar();
   const items = [
-    { title: "Patient Information", status: sideBarStates.patient },
-    { title: "Case Information", status: sideBarStates.case },
-    { title: "Disease Information", status: sideBarStates.disease },
+    { title: "Patient Information", status: sideBarSectionStates.patient },
+    { title: "Case Information", status: sideBarSectionStates.case },
+    { title: "Disease Information", status: sideBarSectionStates.disease },
   ] as FormStatusItem[];
 
   return (

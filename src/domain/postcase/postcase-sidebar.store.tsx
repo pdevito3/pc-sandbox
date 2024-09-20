@@ -50,41 +50,49 @@
 
 import { create } from "zustand";
 
-type PostCaseSideBarState = "valid" | "invalid" | "unknown";
+type PostCaseSideBarFormValidityState = "valid" | "invalid" | "unknown";
 
 interface PostCaseSideBarStore {
-  sideBarStates: { [key: string]: PostCaseSideBarState };
-  updateSideBarState: (title: string, newState: PostCaseSideBarState) => void;
+  sideBarSectionStates: { [key: string]: PostCaseSideBarFormValidityState };
+  updateSideBarSectionState: (
+    title: string,
+    newState: PostCaseSideBarFormValidityState
+  ) => void;
   isPageValid: () => boolean;
 }
 
 export const usePostCaseSideBarStore = create<PostCaseSideBarStore>(
   (set, get) => ({
-    sideBarStates: {
+    sideBarSectionStates: {
       patient: "unknown",
       case: "unknown",
       disease: "unknown",
     },
-    updateSideBarState: (title: string, newState: PostCaseSideBarState) =>
+    updateSideBarSectionState: (
+      title: string,
+      newState: PostCaseSideBarFormValidityState
+    ) =>
       set((state) => ({
-        sideBarStates: {
-          ...state.sideBarStates,
+        sideBarSectionStates: {
+          ...state.sideBarSectionStates,
           [title]: newState,
         },
       })),
     isPageValid: () => {
-      const { sideBarStates } = get();
+      const { sideBarSectionStates: sideBarStates } = get();
       return Object.values(sideBarStates).every((state) => state === "valid");
     },
   })
 );
 
 export const usePostCaseSideBar = () => {
-  const sideBarStates = usePostCaseSideBarStore((state) => state.sideBarStates);
-  const updateSideBarState = usePostCaseSideBarStore(
-    (state) => state.updateSideBarState
+  const sideBarSectionStates = usePostCaseSideBarStore(
+    (state) => state.sideBarSectionStates
+  );
+  const updateSideBarSectionState = usePostCaseSideBarStore(
+    (state) => state.updateSideBarSectionState
   );
   const isPageValid = usePostCaseSideBarStore((state) => state.isPageValid);
 
-  return { sideBarStates, updateSideBarState, isPageValid };
+  return { sideBarSectionStates, updateSideBarSectionState, isPageValid };
 };

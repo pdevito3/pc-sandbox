@@ -33,10 +33,10 @@ export function CaseForm({ caseId, caseData, onSubmit }: CaseFormProps) {
     onSubmit(data);
   };
 
-  const { updateSideBarState } = usePostCaseSideBar();
+  const { updateSideBarSectionState } = usePostCaseSideBar();
   React.useEffect(() => {
     const newState = isValid ? "valid" : "invalid";
-    updateSideBarState("case", newState);
+    updateSideBarSectionState("case", newState);
     console.log("newState", newState);
   }, [isValid]);
 

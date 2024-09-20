@@ -39,9 +39,9 @@ export function PatientPostCaseForm({
   const onSubmitHandler = (patientData: PatientFormData) => {
     onSubmit({ patient: patientData });
   };
-  const { updateSideBarState } = usePostCaseSideBar();
+  const { updateSideBarSectionState } = usePostCaseSideBar();
   React.useEffect(() => {
-    updateSideBarState("patient", isValid ? "valid" : "invalid");
+    updateSideBarSectionState("patient", isValid ? "valid" : "invalid");
   }, [isValid]);
 
   return (

@@ -39,9 +39,9 @@ export function DiseaseForm({
   const onSubmitHandler = (data: DiseaseFormData) => {
     onSubmit(data);
   };
-  const { updateSideBarState } = usePostCaseSideBar();
+  const { updateSideBarSectionState } = usePostCaseSideBar();
   React.useEffect(() => {
-    updateSideBarState("disease", isValid ? "valid" : "invalid");
+    updateSideBarSectionState("disease", isValid ? "valid" : "invalid");
   }, [isValid]);
 
   return (
