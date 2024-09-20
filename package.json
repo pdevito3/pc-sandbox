@@ -1,0 +1,31 @@
+{
+  "name": "pc-sandbox",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "dev": "vite --port=3001",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite"
+  },
+  "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.56.1",
+    "@tanstack/router-plugin": "^1.58.4",
+    "@types/react": "^18.3.8",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.4"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
+    "@tanstack/react-query": "^5.56.2",
+    "@tanstack/react-router": "^1.58.3",
+    "@tanstack/router-devtools": "^1.58.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "zod": "^3.23.8"
+  }
+}
