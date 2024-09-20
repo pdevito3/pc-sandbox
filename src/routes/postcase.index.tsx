@@ -27,6 +27,7 @@ function PostCaseComponent() {
   const handlePatientSubmit = async (data: { patient: PatientFormData }) => {
     try {
       await createPatient.mutateAsync(data.patient);
+      toast.success(`Patient data saved successfully!`);
       return {
         state: "success",
         message: "Patient data saved successfully!",
@@ -44,6 +45,7 @@ function PostCaseComponent() {
     try {
       await createCase.mutateAsync(data);
       toast.success(`Case data saved successfully!`);
+
       return {
         state: "success",
         message: "Case data saved successfully!",
@@ -61,6 +63,7 @@ function PostCaseComponent() {
     try {
       await createDisease.mutateAsync(data);
       toast.success(`Disease data saved successfully!`);
+
       return {
         state: "success",
         message: "Disease data saved successfully!",
