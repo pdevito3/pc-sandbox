@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce } from "lodash";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { PostCaseApiResponse } from "../../../types/index";
@@ -48,22 +48,19 @@ export function PatientPostCaseForm({
     updateSideBarSectionState("patient", isValid ? "valid" : "invalid");
   }, [isValid, updateSideBarSectionState]);
 
-  const debouncedSubmit = React.useCallback(
-    debounce(async (data: PatientFormData) => {
-      if (!isValid) {
-        return;
-      }
+  const debouncedSubmit = debounce(async (data: PatientFormData) => {
+    if (!isValid) {
+      return;
+    }
 
-      startAutosavingForm("patient");
-      var response = await onSubmit({ patient: data }); // await is important here to let autosaving show
-      if (response.state === "success") {
-        finishAutosavingForm("patient", true);
-      } else {
-        finishAutosavingForm("patient", false);
-      }
-    }, 1500),
-    [onSubmit, isValid]
-  );
+    startAutosavingForm("patient");
+    var response = await onSubmit({ patient: data });
+    if (response.state === "success") {
+      finishAutosavingForm("patient", true);
+    } else {
+      finishAutosavingForm("patient", false);
+    }
+  }, 1500);
 
   useEffect(() => {
     const subscription = watch((data) => {
