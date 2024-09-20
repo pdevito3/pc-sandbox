@@ -13,7 +13,7 @@ import {
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
 import { FormStatusCard } from "../domain/postcase/form-status-card";
-import { usePostCaseSideBar } from "../domain/postcase/postcase-sidebar";
+import { usePostCaseSideBar } from "../domain/postcase/postcase-sidebar.store";
 
 export const Route = createFileRoute("/postcase/$patientId/$caseId")({
   component: PostCaseEditComponent,
@@ -62,11 +62,6 @@ function PostCaseEditComponent() {
       <h3 className="text-2xl font-bold mb-6">Post Case</h3>
       <div className="flex items-start justify-between">
         <FormStatusCard
-          items={[
-            { title: "Patient Information", status: sideBarStates.patient },
-            { title: "Case Information", status: sideBarStates.case },
-            { title: "Disease Information", status: sideBarStates.disease },
-          ]}
           isLoading={isLoadingPatient || isLoadingCase || isLoadingDisease}
         />
         <div className="flex-1">

@@ -1,4 +1,5 @@
 import { twMerge } from "tailwind-merge";
+import { usePostCaseSideBar } from "./postcase-sidebar.store";
 
 type FormStatus = "valid" | "invalid" | "unknown";
 
@@ -8,11 +9,17 @@ interface FormStatusItem {
 }
 
 interface FormStatusCardProps {
-  items: FormStatusItem[];
   isLoading?: boolean;
 }
 
-export function FormStatusCard({ items, isLoading }: FormStatusCardProps) {
+export function FormStatusCard({ isLoading }: FormStatusCardProps) {
+  const { sideBarStates, isPageValid } = usePostCaseSideBar();
+  const items = [
+    { title: "Patient Information", status: sideBarStates.patient },
+    { title: "Case Information", status: sideBarStates.case },
+    { title: "Disease Information", status: sideBarStates.disease },
+  ] as FormStatusItem[];
+
   return (
     <div className="bg-white shadow-md rounded-lg p-4 w-64 dark:bg-slate-800">
       <h3 className="text-lg font-semibold mb-4">Form Status</h3>
@@ -48,6 +55,9 @@ export function FormStatusCard({ items, isLoading }: FormStatusCardProps) {
           </li>
         ))}
       </ul>
+      <p className="pt-10 text-start text-sky-500 text-xs font-semibold">
+        {isPageValid() ? "Ready to submit!" : "Some forms are invalid"}
+      </p>
     </div>
   );
 }

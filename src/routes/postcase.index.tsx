@@ -10,7 +10,6 @@ import {
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
 import { FormStatusCard } from "../domain/postcase/form-status-card";
-import { usePostCaseSideBar } from "../domain/postcase/postcase-sidebar";
 
 export const Route = createFileRoute("/postcase/")({
   component: PostCaseComponent,
@@ -32,20 +31,12 @@ function PostCaseComponent() {
     toast.success(`Submitted Disease data: ${JSON.stringify(data, null, 2)}`);
   };
 
-  const { sideBarStates } = usePostCaseSideBar();
-
   return (
     <div className="p-8">
       <h3 className="text-2xl font-bold mb-6">Post Case</h3>
 
       <div className="flex items-start justify-between">
-        <FormStatusCard
-          items={[
-            { title: "Patient Information", status: sideBarStates.patient },
-            { title: "Case Information", status: sideBarStates.case },
-            { title: "Disease Information", status: sideBarStates.disease },
-          ]}
-        />
+        <FormStatusCard />
         <div className="flex-1">
           <div className="">
             <PatientPostCaseForm onSubmit={handlePatientSubmit} />

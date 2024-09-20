@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { usePostCaseSideBar } from "../../postcase/postcase-sidebar";
+import { usePostCaseSideBar } from "../../postcase/postcase-sidebar.store";
 
 const caseFormSchema = z.object({
   conferenceName: z.string().min(1, "Conference name is required"),

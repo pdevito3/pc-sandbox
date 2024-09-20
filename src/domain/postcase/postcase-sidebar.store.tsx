@@ -55,27 +55,36 @@ type PostCaseSideBarState = "valid" | "invalid" | "unknown";
 interface PostCaseSideBarStore {
   sideBarStates: { [key: string]: PostCaseSideBarState };
   updateSideBarState: (title: string, newState: PostCaseSideBarState) => void;
+  isPageValid: () => boolean;
 }
 
-export const usePostCaseSideBarStore = create<PostCaseSideBarStore>((set) => ({
-  sideBarStates: {
-    patient: "unknown",
-    case: "unknown",
-    disease: "unknown",
-  },
-  updateSideBarState: (title: string, newState: PostCaseSideBarState) =>
-    set((state) => ({
-      sideBarStates: {
-        ...state.sideBarStates,
-        [title]: newState,
-      },
-    })),
-}));
+export const usePostCaseSideBarStore = create<PostCaseSideBarStore>(
+  (set, get) => ({
+    sideBarStates: {
+      patient: "unknown",
+      case: "unknown",
+      disease: "unknown",
+    },
+    updateSideBarState: (title: string, newState: PostCaseSideBarState) =>
+      set((state) => ({
+        sideBarStates: {
+          ...state.sideBarStates,
+          [title]: newState,
+        },
+      })),
+    isPageValid: () => {
+      const { sideBarStates } = get();
+      return Object.values(sideBarStates).every((state) => state === "valid");
+    },
+  })
+);
 
 export const usePostCaseSideBar = () => {
   const sideBarStates = usePostCaseSideBarStore((state) => state.sideBarStates);
   const updateSideBarState = usePostCaseSideBarStore(
     (state) => state.updateSideBarState
   );
-  return { sideBarStates, updateSideBarState };
+  const isPageValid = usePostCaseSideBarStore((state) => state.isPageValid);
+
+  return { sideBarStates, updateSideBarState, isPageValid };
 };
