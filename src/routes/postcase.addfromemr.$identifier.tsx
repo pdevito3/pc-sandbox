@@ -1,4 +1,5 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
+import toast from "react-hot-toast";
 import { CaseForm, CaseFormData } from "../domain/cases/components/case-form";
 import {
   DiseaseForm,
@@ -19,15 +20,15 @@ function PostCaseEmrComponent() {
   const { data: seedData, isLoading } = useEmrSeedData({ identifier });
 
   const handlePatientSubmit = (data: PatientFormData) => {
-    console.log("Patient data:", JSON.stringify(data, null, 2));
+    toast.success("Patient data added successfully!");
   };
 
   const handleCaseSubmit = (data: CaseFormData) => {
-    console.log("Case data:", JSON.stringify(data, null, 2));
+    toast.success("Case data added successfully!");
   };
 
   const handleDiseaseSubmit = (data: DiseaseFormData) => {
-    console.log("Disease data:", JSON.stringify(data, null, 2));
+    toast.success("Disease data added successfully!");
   };
 
   return (

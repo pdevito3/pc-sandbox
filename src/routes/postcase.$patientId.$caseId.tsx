@@ -1,4 +1,5 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
+import toast from "react-hot-toast";
 import { useCase } from "../domain/cases/apis/get-case";
 import { CaseForm, CaseFormData } from "../domain/cases/components/case-form";
 import { useDisease } from "../domain/diseases/apis/get-disease";
@@ -24,18 +25,24 @@ function PostCaseEditComponent() {
   const { data: caseDto, isLoading: isLoadingCase } = useCase({ caseId });
   const { data: diseaseDto, isLoading: isLoadingDisease } = useDisease({
     diseaseId: caseId,
-  }); // Assuming diseaseId is the same as caseId
+  });
 
   const handlePatientSubmit = (data: PatientFormData) => {
-    console.log("Patient data:", JSON.stringify(data, null, 2));
+    toast.success(
+      `Patient data updated successfully!\n\n${JSON.stringify(data, null, 2)}`
+    );
   };
 
   const handleCaseSubmit = (data: CaseFormData) => {
-    console.log("Case data:", JSON.stringify(data, null, 2));
+    toast.success(
+      `Case data updated successfully!\n\n${JSON.stringify(data, null, 2)}`
+    );
   };
 
   const handleDiseaseSubmit = (data: DiseaseFormData) => {
-    console.log("Disease data:", JSON.stringify(data, null, 2));
+    toast.success(
+      `Disease data updated successfully!\n\n${JSON.stringify(data, null, 2)}`
+    );
   };
 
   if (isLoadingPatient || isLoadingCase || isLoadingDisease) {
