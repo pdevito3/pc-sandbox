@@ -13,6 +13,7 @@ import {
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
 import { FormStatusCard } from "../domain/postcase/form-status-card";
+import { PostCaseApiResponse } from "../types";
 
 export const Route = createFileRoute("/postcase/")({
   component: PostCaseComponent,
@@ -26,9 +27,16 @@ function PostCaseComponent() {
   const handlePatientSubmit = async (data: { patient: PatientFormData }) => {
     try {
       await createPatient.mutateAsync(data.patient);
-      toast.success(`Patient data saved successfully!`);
+      return {
+        state: "success",
+        message: "Patient data saved successfully!",
+      } as PostCaseApiResponse;
     } catch (error) {
       toast.error(`Failed to save patient data: ${error.message}`);
+      return {
+        state: "fail",
+        message: `Failed to save patient data: ${error.message}`,
+      } as PostCaseApiResponse;
     }
   };
 
@@ -36,8 +44,16 @@ function PostCaseComponent() {
     try {
       await createCase.mutateAsync(data);
       toast.success(`Case data saved successfully!`);
+      return {
+        state: "success",
+        message: "Case data saved successfully!",
+      } as PostCaseApiResponse;
     } catch (error) {
       toast.error(`Failed to save case data: ${error.message}`);
+      return {
+        state: "fail",
+        message: `Failed to save case data: ${error.message}`,
+      } as PostCaseApiResponse;
     }
   };
 
@@ -45,8 +61,16 @@ function PostCaseComponent() {
     try {
       await createDisease.mutateAsync(data);
       toast.success(`Disease data saved successfully!`);
+      return {
+        state: "success",
+        message: "Disease data saved successfully!",
+      } as PostCaseApiResponse;
     } catch (error) {
       toast.error(`Failed to save disease data: ${error.message}`);
+      return {
+        state: "fail",
+        message: `Failed to save disease data: ${error.message}`,
+      } as PostCaseApiResponse;
     }
   };
 

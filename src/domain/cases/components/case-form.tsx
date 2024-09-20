@@ -3,6 +3,7 @@ import { debounce } from "lodash";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { PostCaseApiResponse } from "../../../types";
 import { usePostCaseSideBar } from "../../postcase/postcase-sidebar.store";
 
 const caseFormSchema = z.object({
@@ -15,7 +16,7 @@ export type CaseFormData = z.infer<typeof caseFormSchema>;
 interface CaseFormProps {
   caseId?: string;
   caseData?: CaseFormData;
-  onSubmit: (data: CaseFormData) => void;
+  onSubmit: (data: CaseFormData) => PostCaseApiResponse;
 }
 
 export function CaseForm({ caseId, caseData, onSubmit }: CaseFormProps) {
@@ -47,8 +48,12 @@ export function CaseForm({ caseId, caseData, onSubmit }: CaseFormProps) {
       }
 
       startAutosavingForm("case");
-      await onSubmit(data);
-      finishAutosavingForm("case", true);
+      var response = await onSubmit(data); // await is important here to let autosaving show
+      if (response.state === "success") {
+        finishAutosavingForm("case", true);
+      } else {
+        finishAutosavingForm("case", false);
+      }
     }, 1500),
     [onSubmit, isValid]
   );

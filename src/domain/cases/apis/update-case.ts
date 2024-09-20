@@ -6,7 +6,7 @@ const updateCase = async (data: {
   case: CaseFormData;
 }): Promise<CaseFormData> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  if (Math.random() < 0.9) {
+  if (Math.random() < 0.1) {
     throw new Error("Failed to update case");
   }
   return data.case;

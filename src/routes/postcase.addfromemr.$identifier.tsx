@@ -11,6 +11,7 @@ import {
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
 import { FormStatusCard } from "../domain/postcase/form-status-card";
+import { PostCaseApiResponse } from "../types";
 
 export const Route = createFileRoute("/postcase/addfromemr/$identifier")({
   component: PostCaseEmrComponent,
@@ -22,14 +23,26 @@ function PostCaseEmrComponent() {
 
   const handlePatientSubmit = (data: { patient: PatientFormData }) => {
     toast.success("Patient data autosaved successfully!");
+    return {
+      state: "success",
+      message: "Patient data autosaved successfully!",
+    } as PostCaseApiResponse;
   };
 
   const handleCaseSubmit = (data: CaseFormData) => {
     toast.success("Case data autosaved successfully!");
+    return {
+      state: "success",
+      message: "Case data autosaved successfully!",
+    } as PostCaseApiResponse;
   };
 
   const handleDiseaseSubmit = (data: DiseaseFormData) => {
     toast.success("Disease data autosaved successfully!");
+    return {
+      state: "success",
+      message: "Disease data autosaved successfully!",
+    } as PostCaseApiResponse;
   };
 
   return (

@@ -6,7 +6,7 @@ const updatePatient = async (data: {
   patient: PatientFormData;
 }): Promise<PatientFormData> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  if (Math.random() < 0.9) {
+  if (Math.random() < 0.1) {
     throw new Error("Failed to update patient");
   }
   return data.patient;

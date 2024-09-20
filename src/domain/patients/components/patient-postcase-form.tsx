@@ -3,6 +3,7 @@ import { debounce } from "lodash";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { PostCaseApiResponse } from "../../../types/index";
 import { usePostCaseSideBar } from "../../postcase/postcase-sidebar.store";
 
 const patientFormSchema = z.object({
@@ -18,7 +19,7 @@ export type PatientFormData = z.infer<typeof patientFormSchema>;
 interface PatientPostCaseFormProps {
   patientId?: string;
   patientData?: PatientFormData;
-  onSubmit: (data: { patient: PatientFormData }) => void;
+  onSubmit: (data: { patient: PatientFormData }) => PostCaseApiResponse;
 }
 
 export function PatientPostCaseForm({
@@ -54,8 +55,12 @@ export function PatientPostCaseForm({
       }
 
       startAutosavingForm("patient");
-      await onSubmit({ patient: data });
-      finishAutosavingForm("patient", true);
+      var response = await onSubmit({ patient: data }); // await is important here to let autosaving show
+      if (response.state === "success") {
+        finishAutosavingForm("patient", true);
+      } else {
+        finishAutosavingForm("patient", false);
+      }
     }, 1500),
     [onSubmit, isValid]
   );

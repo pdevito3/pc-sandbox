@@ -78,9 +78,7 @@ export function FormStatusCard({ isLoading }: FormStatusCardProps) {
           <p className="text-xs font-semibold text-sky-500">Autosaving...</p>
         )}
         {autosaveState() === "error" && (
-          <p className="text-xs font-semibold  font-rose-500">
-            Autosave failed
-          </p>
+          <p className="text-xs font-semibold text-rose-500">Autosave failed</p>
         )}
         {autosaveState() === "successful" && (
           <p className="text-xs font-semibold text-emerald-500">

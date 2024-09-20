@@ -28,10 +28,14 @@ const fetchEmrSeedData = async (identifier: string): Promise<EmrSeedData> => {
   };
 };
 
-export const useEmrSeedData = ({ identifier }: { identifier: string }) => {
+export const useEmrSeedData = ({
+  identifier,
+}: {
+  identifier: string | undefined;
+}) => {
   return useQuery<EmrSeedData, Error>({
     queryKey: ["emrSeedData", identifier],
-    queryFn: () => fetchEmrSeedData(identifier),
+    queryFn: () => fetchEmrSeedData(identifier!),
     enabled: !!identifier,
   });
 };

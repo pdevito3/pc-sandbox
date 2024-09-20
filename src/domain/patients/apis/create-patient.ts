@@ -5,7 +5,7 @@ const createPatient = async (
   data: PatientFormData
 ): Promise<PatientFormData> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  if (Math.random() < 0.9) {
+  if (Math.random() < 0.1) {
     throw new Error("Failed to create patient");
   }
   return data;

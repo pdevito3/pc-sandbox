@@ -16,6 +16,7 @@ import {
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
 import { FormStatusCard } from "../domain/postcase/form-status-card";
+import { PostCaseApiResponse } from "../types";
 
 export const Route = createFileRoute("/postcase/$patientId/$caseId")({
   component: PostCaseEditComponent,
@@ -42,8 +43,16 @@ function PostCaseEditComponent() {
         patient: data.patient,
       });
       toast.success(`Patient data updated successfully!`);
+      return {
+        state: "success",
+        message: "Patient data updated successfully!",
+      } as PostCaseApiResponse;
     } catch (error) {
       toast.error(`Failed to update patient data: ${error.message}`);
+      return {
+        state: "fail",
+        message: `Failed to update patient data: ${error.message}`,
+      } as PostCaseApiResponse;
     }
   };
 
@@ -51,8 +60,16 @@ function PostCaseEditComponent() {
     try {
       await updateCase.mutateAsync({ id: caseId!, case: data });
       toast.success(`Case data updated successfully!`);
+      return {
+        state: "success",
+        message: "Case data updated successfully!",
+      } as PostCaseApiResponse;
     } catch (error) {
       toast.error(`Failed to update case data: ${error.message}`);
+      return {
+        state: "fail",
+        message: `Failed to update case data: ${error.message}`,
+      } as PostCaseApiResponse;
     }
   };
 
@@ -60,8 +77,16 @@ function PostCaseEditComponent() {
     try {
       await updateDisease.mutateAsync({ id: caseId!, disease: data });
       toast.success(`Disease data updated successfully!`);
+      return {
+        state: "success",
+        message: "Disease data updated successfully!",
+      } as PostCaseApiResponse;
     } catch (error) {
       toast.error(`Failed to update disease data: ${error.message}`);
+      return {
+        state: "fail",
+        message: `Failed to update disease data: ${error.message}`,
+      } as PostCaseApiResponse;
     }
   };
 
