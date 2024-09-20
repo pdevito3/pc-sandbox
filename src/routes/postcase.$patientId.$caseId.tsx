@@ -13,7 +13,6 @@ import {
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
 import { FormStatusCard } from "../domain/postcase/form-status-card";
-import { usePostCaseSideBar } from "../domain/postcase/postcase-sidebar.store";
 
 export const Route = createFileRoute("/postcase/$patientId/$caseId")({
   component: PostCaseEditComponent,
@@ -29,24 +28,26 @@ function PostCaseEditComponent() {
     diseaseId: caseId,
   });
 
-  const handlePatientSubmit = (data: PatientFormData) => {
+  const handlePatientSubmit = async (data: { patient: PatientFormData }) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     toast.success(
-      `Patient data updated successfully!\n\n${JSON.stringify(data, null, 2)}`
+      `Patient data autosaved successfully!\n\n${JSON.stringify(data.patient, null, 2)}`
     );
   };
 
-  const handleCaseSubmit = (data: CaseFormData) => {
+  const handleCaseSubmit = async (data: CaseFormData) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     toast.success(
-      `Case data updated successfully!\n\n${JSON.stringify(data, null, 2)}`
+      `Case data autosaved successfully!\n\n${JSON.stringify(data, null, 2)}`
     );
   };
 
-  const handleDiseaseSubmit = (data: DiseaseFormData) => {
+  const handleDiseaseSubmit = async (data: DiseaseFormData) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     toast.success(
-      `Disease data updated successfully!\n\n${JSON.stringify(data, null, 2)}`
+      `Disease data autosaved successfully!\n\n${JSON.stringify(data, null, 2)}`
     );
   };
-  const { sideBarStates } = usePostCaseSideBar();
 
   if (isLoadingPatient || isLoadingCase || isLoadingDisease) {
     return (

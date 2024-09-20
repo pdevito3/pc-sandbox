@@ -16,19 +16,18 @@ export const Route = createFileRoute("/postcase/")({
 });
 
 function PostCaseComponent() {
-  const handlePatientSubmit = (data: PatientFormData) => {
-    // console.log("Patient data:", JSON.stringify(data, null, 2));
-    toast.success(`Submitted Patient data: ${JSON.stringify(data, null, 2)}`);
+  const handlePatientSubmit = (data: { patient: PatientFormData }) => {
+    toast.success(
+      `Autosaved Patient data: ${JSON.stringify(data.patient, null, 2)}`
+    );
   };
 
   const handleCaseSubmit = (data: CaseFormData) => {
-    // console.log("Case data:", JSON.stringify(data, null, 2));
-    toast.success(`Submitted Case data: ${JSON.stringify(data, null, 2)}`);
+    toast.success(`Autosaved Case data: ${JSON.stringify(data, null, 2)}`);
   };
 
   const handleDiseaseSubmit = (data: DiseaseFormData) => {
-    // console.log("Disease data:", JSON.stringify(data, null, 2));
-    toast.success(`Submitted Disease data: ${JSON.stringify(data, null, 2)}`);
+    toast.success(`Autosaved Disease data: ${JSON.stringify(data, null, 2)}`);
   };
 
   return (

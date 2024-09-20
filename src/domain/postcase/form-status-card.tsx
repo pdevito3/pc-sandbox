@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { usePostCaseSideBar } from "./postcase-sidebar.store";
 
@@ -13,12 +14,21 @@ interface FormStatusCardProps {
 }
 
 export function FormStatusCard({ isLoading }: FormStatusCardProps) {
-  const { sideBarSectionStates, isPageValid } = usePostCaseSideBar();
+  const {
+    sideBarSectionStates,
+    isPageValid,
+    autosaveState,
+    resetFormSaveStates,
+  } = usePostCaseSideBar();
   const items = [
     { title: "Patient Information", status: sideBarSectionStates.patient },
     { title: "Case Information", status: sideBarSectionStates.case },
     { title: "Disease Information", status: sideBarSectionStates.disease },
   ] as FormStatusItem[];
+
+  useEffect(() => {
+    resetFormSaveStates();
+  }, [resetFormSaveStates]);
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 w-64 dark:bg-slate-800">
@@ -55,9 +65,29 @@ export function FormStatusCard({ isLoading }: FormStatusCardProps) {
           </li>
         ))}
       </ul>
-      <p className="pt-10 text-start text-sky-500 text-xs font-semibold">
+      <p className="py-5 text-start text-orange-500 text-xs font-semibold">
         {isPageValid() ? "Ready to submit!" : "Some forms are invalid"}
       </p>
+      <div className="pt-4 border-t-2 border-slate-500">
+        {autosaveState() === "initial" && (
+          <p className="text-xs font-semibold text-slate-500">
+            Autosave enabled
+          </p>
+        )}
+        {autosaveState() === "saving" && (
+          <p className="text-xs font-semibold text-sky-500">Autosaving...</p>
+        )}
+        {autosaveState() === "error" && (
+          <p className="text-xs font-semibold  font-rose-500">
+            Autosave failed
+          </p>
+        )}
+        {autosaveState() === "successful" && (
+          <p className="text-xs font-semibold text-emerald-500">
+            Autosave successful
+          </p>
+        )}
+      </div>
     </div>
   );
 }

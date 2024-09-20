@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { debounce } from "lodash";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { usePostCaseSideBar } from "../../postcase/postcase-sidebar.store";
@@ -22,30 +23,51 @@ export function CaseForm({ caseId, caseData, onSubmit }: CaseFormProps) {
 
   const {
     register,
-    handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
+    watch,
   } = useForm<CaseFormData>({
     resolver: zodResolver(caseFormSchema),
     defaultValues: caseData,
   });
 
-  const onSubmitHandler = (data: CaseFormData) => {
-    onSubmit(data);
-  };
+  const {
+    updateSideBarSectionState,
+    startAutosavingForm,
+    finishAutosavingForm,
+  } = usePostCaseSideBar();
 
-  const { updateSideBarSectionState } = usePostCaseSideBar();
-  React.useEffect(() => {
-    const newState = isValid ? "valid" : "invalid";
-    updateSideBarSectionState("case", newState);
-    console.log("newState", newState);
-  }, [isValid]);
+  useEffect(() => {
+    updateSideBarSectionState("case", isValid ? "valid" : "invalid");
+  }, [isValid, updateSideBarSectionState]);
+
+  const debouncedSubmit = React.useCallback(
+    debounce(async (data: CaseFormData) => {
+      if (!isValid) {
+        return;
+      }
+
+      startAutosavingForm("case");
+      await onSubmit(data);
+      finishAutosavingForm("case", true);
+    }, 1500),
+    [onSubmit, isValid]
+  );
+
+  useEffect(() => {
+    const subscription = watch((data) => {
+      if (isDirty) {
+        debouncedSubmit(data as CaseFormData);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, isDirty, debouncedSubmit]);
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800">
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-6 dark:text-gray-200">
         {isEditMode ? "Edit Case" : "Add Case"}
       </h2>
-      <form onSubmit={handleSubmit(onSubmitHandler)}>
+      <form>
         <div className="mb-4">
           <label
             htmlFor="conferenceName"
@@ -79,13 +101,6 @@ export function CaseForm({ caseId, caseData, onSubmit }: CaseFormProps) {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-6"
-        >
-          {isEditMode ? "Update" : "Add"} Case
-        </button>
       </form>
     </div>
   );

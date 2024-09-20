@@ -20,16 +20,16 @@ function PostCaseEmrComponent() {
   const { identifier } = useParams({ strict: false });
   const { data: seedData, isLoading } = useEmrSeedData({ identifier });
 
-  const handlePatientSubmit = (data: PatientFormData) => {
-    toast.success("Patient data added successfully!");
+  const handlePatientSubmit = (data: { patient: PatientFormData }) => {
+    toast.success("Patient data autosaved successfully!");
   };
 
   const handleCaseSubmit = (data: CaseFormData) => {
-    toast.success("Case data added successfully!");
+    toast.success("Case data autosaved successfully!");
   };
 
   const handleDiseaseSubmit = (data: DiseaseFormData) => {
-    toast.success("Disease data added successfully!");
+    toast.success("Disease data autosaved successfully!");
   };
 
   return (

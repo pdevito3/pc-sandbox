@@ -51,6 +51,7 @@
 import { create } from "zustand";
 
 type PostCaseSideBarFormValidityState = "valid" | "invalid" | "unknown";
+type AutosaveState = "initial" | "saving" | "error" | "successful";
 
 interface PostCaseSideBarStore {
   sideBarSectionStates: { [key: string]: PostCaseSideBarFormValidityState };
@@ -59,6 +60,12 @@ interface PostCaseSideBarStore {
     newState: PostCaseSideBarFormValidityState
   ) => void;
   isPageValid: () => boolean;
+  autosaveState: () => AutosaveState;
+  formsAutosaving: string[];
+  startAutosavingForm: (formName: string) => void;
+  finishAutosavingForm: (formName: string, success: boolean) => void;
+  formSaveStates: { [key: string]: AutosaveState };
+  resetFormSaveStates: () => void;
 }
 
 export const usePostCaseSideBarStore = create<PostCaseSideBarStore>(
@@ -82,6 +89,55 @@ export const usePostCaseSideBarStore = create<PostCaseSideBarStore>(
       const { sideBarSectionStates: sideBarStates } = get();
       return Object.values(sideBarStates).every((state) => state === "valid");
     },
+    autosaveState: () => {
+      const { formsAutosaving } = get();
+      if (formsAutosaving.length > 0) {
+        return "saving";
+      }
+      if (
+        Object.values(get().formSaveStates).some((state) => state === "error")
+      ) {
+        return "error";
+      }
+
+      if (
+        Object.values(get().formSaveStates).some(
+          (state) => state === "successful"
+        )
+      ) {
+        return "successful";
+      }
+
+      return "initial";
+    },
+    formsAutosaving: [],
+    startAutosavingForm: (formName: string) => {
+      set({
+        formSaveStates: { ...get().formSaveStates, [formName]: "saving" },
+      });
+      set({ formsAutosaving: [...get().formsAutosaving, formName] });
+    },
+    finishAutosavingForm: (formName: string, success: boolean) => {
+      set({
+        formsAutosaving: get().formsAutosaving.filter(
+          (name) => name !== formName
+        ),
+      });
+      if (success) {
+        set({
+          formSaveStates: { ...get().formSaveStates, [formName]: "successful" },
+        });
+      } else {
+        set({
+          formSaveStates: { ...get().formSaveStates, [formName]: "error" },
+        });
+      }
+    },
+    formSaveStates: {},
+    resetFormSaveStates: () => {
+      set({ formSaveStates: {} });
+      set({ formsAutosaving: [] });
+    },
   })
 );
 
@@ -94,5 +150,28 @@ export const usePostCaseSideBar = () => {
   );
   const isPageValid = usePostCaseSideBarStore((state) => state.isPageValid);
 
-  return { sideBarSectionStates, updateSideBarSectionState, isPageValid };
+  const autosaveState = usePostCaseSideBarStore((state) => state.autosaveState);
+  const startAutosavingForm = usePostCaseSideBarStore(
+    (state) => state.startAutosavingForm
+  );
+  const finishAutosavingForm = usePostCaseSideBarStore(
+    (state) => state.finishAutosavingForm
+  );
+  const formsAutosaving = usePostCaseSideBarStore(
+    (state) => state.formsAutosaving
+  );
+  const resetFormSaveStates = usePostCaseSideBarStore(
+    (state) => state.resetFormSaveStates
+  );
+
+  return {
+    sideBarSectionStates,
+    updateSideBarSectionState,
+    isPageValid,
+    autosaveState,
+    startAutosavingForm,
+    finishAutosavingForm,
+    formsAutosaving,
+    resetFormSaveStates,
+  };
 };

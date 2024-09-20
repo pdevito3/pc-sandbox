@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { debounce } from "lodash";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { usePostCaseSideBar } from "../../postcase/postcase-sidebar.store";
@@ -30,19 +31,43 @@ export function PatientPostCaseForm({
   const {
     register: registerPatient,
     handleSubmit: handleSubmitPatient,
-    formState: { errors: patientErrors, isValid },
+    formState: { errors: patientErrors, isValid, isDirty },
+    watch,
   } = useForm<PatientFormData>({
     resolver: zodResolver(patientFormSchema),
     defaultValues: patientData,
   });
 
-  const onSubmitHandler = (patientData: PatientFormData) => {
-    onSubmit({ patient: patientData });
-  };
-  const { updateSideBarSectionState } = usePostCaseSideBar();
-  React.useEffect(() => {
+  const {
+    updateSideBarSectionState,
+    startAutosavingForm,
+    finishAutosavingForm,
+  } = usePostCaseSideBar();
+  useEffect(() => {
     updateSideBarSectionState("patient", isValid ? "valid" : "invalid");
-  }, [isValid]);
+  }, [isValid, updateSideBarSectionState]);
+
+  const debouncedSubmit = React.useCallback(
+    debounce(async (data: PatientFormData) => {
+      if (!isValid) {
+        return;
+      }
+
+      startAutosavingForm("patient");
+      await onSubmit({ patient: data });
+      finishAutosavingForm("patient", true);
+    }, 1500),
+    [onSubmit, isValid]
+  );
+
+  useEffect(() => {
+    const subscription = watch((data) => {
+      if (isDirty) {
+        debouncedSubmit(data as PatientFormData);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, isDirty, debouncedSubmit]);
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800">
@@ -50,7 +75,7 @@ export function PatientPostCaseForm({
         {isEditMode ? "Edit Patient" : "Add Patient"}
       </h2>
 
-      <form onSubmit={handleSubmitPatient(onSubmitHandler)}>
+      <form>
         <div className="mb-4">
           <label
             htmlFor="firstName"
@@ -108,13 +133,6 @@ export function PatientPostCaseForm({
             </span>
           )}
         </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-6"
-        >
-          {isEditMode ? "Update" : "Add"} Patient
-        </button>
       </form>
     </div>
   );

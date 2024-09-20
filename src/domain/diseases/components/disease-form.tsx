@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { debounce } from "lodash";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { usePostCaseSideBar } from "../../postcase/postcase-sidebar.store";
@@ -29,27 +30,50 @@ export function DiseaseForm({
 
   const {
     register,
-    handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
+    watch,
   } = useForm<DiseaseFormData>({
     resolver: zodResolver(diseaseFormSchema),
     defaultValues: diseaseData,
   });
 
-  const onSubmitHandler = (data: DiseaseFormData) => {
-    onSubmit(data);
-  };
-  const { updateSideBarSectionState } = usePostCaseSideBar();
-  React.useEffect(() => {
+  const {
+    updateSideBarSectionState,
+    startAutosavingForm,
+    finishAutosavingForm,
+  } = usePostCaseSideBar();
+  useEffect(() => {
     updateSideBarSectionState("disease", isValid ? "valid" : "invalid");
-  }, [isValid]);
+  }, [isValid, updateSideBarSectionState]);
+
+  const debouncedSubmit = React.useCallback(
+    debounce(async (data: DiseaseFormData) => {
+      if (!isValid) {
+        return;
+      }
+
+      startAutosavingForm("disease");
+      await onSubmit(data);
+      finishAutosavingForm("disease", true);
+    }, 1500),
+    [onSubmit, isValid]
+  );
+
+  useEffect(() => {
+    const subscription = watch((data) => {
+      if (isDirty) {
+        debouncedSubmit(data as DiseaseFormData);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, isDirty, debouncedSubmit]);
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800">
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-6 dark:text-gray-200">
         {isEditMode ? "Edit Disease" : "Add Disease"}
       </h2>
-      <form onSubmit={handleSubmit(onSubmitHandler)}>
+      <form>
         <div className="mb-4">
           <label
             htmlFor="cancerType"
@@ -140,13 +164,6 @@ export function DiseaseForm({
             <option value="postmenopausal">Postmenopausal</option>
           </select>
         </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-6"
-        >
-          {isEditMode ? "Update" : "Add"} Disease
-        </button>
       </form>
     </div>
   );
