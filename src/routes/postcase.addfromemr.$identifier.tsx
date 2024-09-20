@@ -10,6 +10,8 @@ import {
   PatientFormData,
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
+import { FormStatusCard } from "../domain/postcase/form-status-card";
+import { usePostCaseSideBar } from "../domain/postcase/postcase-sidebar";
 
 export const Route = createFileRoute("/postcase/addfromemr/$identifier")({
   component: PostCaseEmrComponent,
@@ -30,6 +32,7 @@ function PostCaseEmrComponent() {
   const handleDiseaseSubmit = (data: DiseaseFormData) => {
     toast.success("Disease data added successfully!");
   };
+  const { sideBarStates } = usePostCaseSideBar();
 
   return (
     <div className="p-2">
@@ -38,29 +41,39 @@ function PostCaseEmrComponent() {
       {isLoading && <p>Loading seed data...</p>}
 
       {seedData && (
-        <>
-          <div className="mt-8">
-            <PatientPostCaseForm
-              patientData={{
-                firstName: seedData.patientName.split(" ")[0],
-                lastName: seedData.patientName.split(" ")[1] || "",
-                dateOfBirth: new Date(seedData.dateOfBirth),
-              }}
-              onSubmit={handlePatientSubmit}
-            />
-          </div>
+        <div className="flex items-start justify-between">
+          <FormStatusCard
+            items={[
+              { title: "Patient Information", status: sideBarStates.patient },
+              { title: "Case Information", status: sideBarStates.case },
+              { title: "Disease Information", status: sideBarStates.disease },
+            ]}
+            isLoading={isLoading}
+          />
+          <div className="flex-1">
+            <div className="">
+              <PatientPostCaseForm
+                patientData={{
+                  firstName: seedData.patientName.split(" ")[0],
+                  lastName: seedData.patientName.split(" ")[1] || "",
+                  dateOfBirth: new Date(seedData.dateOfBirth),
+                }}
+                onSubmit={handlePatientSubmit}
+              />
+            </div>
 
-          <div className="mt-8">
-            <CaseForm onSubmit={handleCaseSubmit} />
-          </div>
+            <div className="mt-8">
+              <CaseForm onSubmit={handleCaseSubmit} />
+            </div>
 
-          <div className="mt-8">
-            <DiseaseForm
-              diseaseData={seedData.disease}
-              onSubmit={handleDiseaseSubmit}
-            />
+            <div className="mt-8">
+              <DiseaseForm
+                diseaseData={seedData.disease}
+                onSubmit={handleDiseaseSubmit}
+              />
+            </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

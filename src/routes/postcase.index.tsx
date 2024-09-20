@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import toast from "react-hot-toast";
 import { CaseForm, CaseFormData } from "../domain/cases/components/case-form";
 import {
   DiseaseForm,
@@ -16,49 +17,47 @@ export const Route = createFileRoute("/postcase/")({
 });
 
 function PostCaseComponent() {
+  const handlePatientSubmit = (data: PatientFormData) => {
+    // console.log("Patient data:", JSON.stringify(data, null, 2));
+    toast.success(`Submitted Patient data: ${JSON.stringify(data, null, 2)}`);
+  };
+
+  const handleCaseSubmit = (data: CaseFormData) => {
+    // console.log("Case data:", JSON.stringify(data, null, 2));
+    toast.success(`Submitted Case data: ${JSON.stringify(data, null, 2)}`);
+  };
+
+  const handleDiseaseSubmit = (data: DiseaseFormData) => {
+    // console.log("Disease data:", JSON.stringify(data, null, 2));
+    toast.success(`Submitted Disease data: ${JSON.stringify(data, null, 2)}`);
+  };
+
+  const { sideBarStates } = usePostCaseSideBar();
+
   return (
     <div className="p-8">
       <h3 className="text-2xl font-bold mb-6">Post Case</h3>
 
-      <PostCaseView />
-    </div>
-  );
-}
+      <div className="flex items-start justify-between">
+        <FormStatusCard
+          items={[
+            { title: "Patient Information", status: sideBarStates.patient },
+            { title: "Case Information", status: sideBarStates.case },
+            { title: "Disease Information", status: sideBarStates.disease },
+          ]}
+        />
+        <div className="flex-1">
+          <div className="">
+            <PatientPostCaseForm onSubmit={handlePatientSubmit} />
+          </div>
 
-function PostCaseView() {
-  const handlePatientSubmit = (data: PatientFormData) => {
-    console.log("Patient data:", JSON.stringify(data, null, 2));
-  };
+          <div className="mt-8">
+            <CaseForm onSubmit={handleCaseSubmit} />
+          </div>
 
-  const handleCaseSubmit = (data: CaseFormData) => {
-    console.log("Case data:", JSON.stringify(data, null, 2));
-  };
-
-  const handleDiseaseSubmit = (data: DiseaseFormData) => {
-    console.log("Disease data:", JSON.stringify(data, null, 2));
-  };
-
-  const { sideBarStates } = usePostCaseSideBar();
-  return (
-    <div className="flex items-start justify-between">
-      <FormStatusCard
-        items={[
-          { title: "Patient Information", status: sideBarStates.patient },
-          { title: "Case Information", status: sideBarStates.case },
-          { title: "Disease Information", status: sideBarStates.disease },
-        ]}
-      />
-      <div className="flex-1">
-        <div className="">
-          <PatientPostCaseForm onSubmit={handlePatientSubmit} />
-        </div>
-
-        <div className="mt-8">
-          <CaseForm onSubmit={handleCaseSubmit} />
-        </div>
-
-        <div className="mt-8">
-          <DiseaseForm onSubmit={handleDiseaseSubmit} />
+          <div className="mt-8">
+            <DiseaseForm onSubmit={handleDiseaseSubmit} />
+          </div>
         </div>
       </div>
     </div>

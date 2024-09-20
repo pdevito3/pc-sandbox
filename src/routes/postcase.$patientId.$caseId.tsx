@@ -13,6 +13,7 @@ import {
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
 import { FormStatusCard } from "../domain/postcase/form-status-card";
+import { usePostCaseSideBar } from "../domain/postcase/postcase-sidebar";
 
 export const Route = createFileRoute("/postcase/$patientId/$caseId")({
   component: PostCaseEditComponent,
@@ -45,6 +46,7 @@ function PostCaseEditComponent() {
       `Disease data updated successfully!\n\n${JSON.stringify(data, null, 2)}`
     );
   };
+  const { sideBarStates } = usePostCaseSideBar();
 
   if (isLoadingPatient || isLoadingCase || isLoadingDisease) {
     return (
@@ -61,10 +63,11 @@ function PostCaseEditComponent() {
       <div className="flex items-start justify-between">
         <FormStatusCard
           items={[
-            { title: "Patient Information", status: "invalid" },
-            { title: "Case Information", status: "invalid" },
-            { title: "Disease Information", status: "invalid" },
+            { title: "Patient Information", status: sideBarStates.patient },
+            { title: "Case Information", status: sideBarStates.case },
+            { title: "Disease Information", status: sideBarStates.disease },
           ]}
+          isLoading={isLoadingPatient || isLoadingCase || isLoadingDisease}
         />
         <div className="flex-1">
           <div className="mt-0">

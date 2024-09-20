@@ -9,9 +9,10 @@ interface FormStatusItem {
 
 interface FormStatusCardProps {
   items: FormStatusItem[];
+  isLoading?: boolean;
 }
 
-export function FormStatusCard({ items }: FormStatusCardProps) {
+export function FormStatusCard({ items, isLoading }: FormStatusCardProps) {
   return (
     <div className="bg-white shadow-md rounded-lg p-4 w-64 dark:bg-slate-800">
       <h3 className="text-lg font-semibold mb-4">Form Status</h3>
@@ -28,7 +29,7 @@ export function FormStatusCard({ items }: FormStatusCardProps) {
             >
               {item.title}
             </span>
-            {item.status === "invalid" && (
+            {item.status === "invalid" && !isLoading && (
               <svg
                 className="w-5 h-5 text-rose-500 ml-4"
                 xmlns="http://www.w3.org/2000/svg"
