@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { FormStatusCard } from "../components/FormStatusCard";
 import { CaseForm, CaseFormData } from "../domain/cases/components/case-form";
 import {
   DiseaseForm,
@@ -27,19 +28,30 @@ function PostCaseComponent() {
   };
 
   return (
-    <div className="p-2">
+    <div className="p-8">
       <h3 className="text-2xl font-bold mb-6">Post Case</h3>
 
-      <div className="mb-8">
-        <PatientPostCaseForm onSubmit={handlePatientSubmit} />
-      </div>
+      <div className="flex items-start justify-between">
+        <FormStatusCard
+          items={[
+            { title: "Patient Information", status: "invalid" },
+            { title: "Case Information", status: "invalid" },
+            { title: "Disease Information", status: "invalid" },
+          ]}
+        />
+        <div className="flex-1">
+          <div className="">
+            <PatientPostCaseForm onSubmit={handlePatientSubmit} />
+          </div>
 
-      <div className="mb-8">
-        <CaseForm onSubmit={handleCaseSubmit} />
-      </div>
+          <div className="mt-8">
+            <CaseForm onSubmit={handleCaseSubmit} />
+          </div>
 
-      <div>
-        <DiseaseForm onSubmit={handleDiseaseSubmit} />
+          <div className="mt-8">
+            <DiseaseForm onSubmit={handleDiseaseSubmit} />
+          </div>
+        </div>
       </div>
     </div>
   );

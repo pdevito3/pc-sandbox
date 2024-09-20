@@ -1,5 +1,6 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import toast from "react-hot-toast";
+import { FormStatusCard } from "../components/FormStatusCard";
 import { useCase } from "../domain/cases/apis/get-case";
 import { CaseForm, CaseFormData } from "../domain/cases/components/case-form";
 import { useDisease } from "../domain/diseases/apis/get-disease";
@@ -55,40 +56,52 @@ function PostCaseEditComponent() {
   }
 
   return (
-    <div className="p-2">
+    <div className="p-8">
       <h3 className="text-2xl font-bold mb-6">Post Case</h3>
+      <div className="flex items-start justify-between">
+        <FormStatusCard
+          items={[
+            { title: "Patient Information", status: "invalid" },
+            { title: "Case Information", status: "invalid" },
+            { title: "Disease Information", status: "invalid" },
+          ]}
+        />
+        <div className="flex-1">
+          <div className="mt-0">
+            {patientDto && (
+              <PatientPostCaseForm
+                patientId={patientId}
+                patientData={{
+                  ...patientDto,
+                  dateOfBirth: patientDto.dateOfBirth
+                    .toISOString()
+                    .split("T")[0],
+                }}
+                onSubmit={handlePatientSubmit}
+              />
+            )}
+          </div>
 
-      <div className="mb-8">
-        {patientDto && (
-          <PatientPostCaseForm
-            patientId={patientId}
-            patientData={{
-              ...patientDto,
-              dateOfBirth: patientDto.dateOfBirth.toISOString().split("T")[0],
-            }}
-            onSubmit={handlePatientSubmit}
-          />
-        )}
-      </div>
+          <div className="mt-8">
+            {caseDto && (
+              <CaseForm
+                caseId={caseId}
+                caseData={caseDto}
+                onSubmit={handleCaseSubmit}
+              />
+            )}
+          </div>
 
-      <div className="mb-8">
-        {caseDto && (
-          <CaseForm
-            caseId={caseId}
-            caseData={caseDto}
-            onSubmit={handleCaseSubmit}
-          />
-        )}
-      </div>
-
-      <div>
-        {diseaseDto && (
-          <DiseaseForm
-            diseaseId={caseId}
-            diseaseData={diseaseDto}
-            onSubmit={handleDiseaseSubmit}
-          />
-        )}
+          <div className="mt-8">
+            {diseaseDto && (
+              <DiseaseForm
+                diseaseId={caseId}
+                diseaseData={diseaseDto}
+                onSubmit={handleDiseaseSubmit}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

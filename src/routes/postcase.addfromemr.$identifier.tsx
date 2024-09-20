@@ -39,7 +39,7 @@ function PostCaseEmrComponent() {
 
       {seedData && (
         <>
-          <div className="mb-8">
+          <div className="mt-8">
             <PatientPostCaseForm
               patientData={{
                 firstName: seedData.patientName.split(" ")[0],
@@ -50,11 +50,11 @@ function PostCaseEmrComponent() {
             />
           </div>
 
-          <div className="mb-8">
+          <div className="mt-8">
             <CaseForm onSubmit={handleCaseSubmit} />
           </div>
 
-          <div>
+          <div className="mt-8">
             <DiseaseForm
               diseaseData={seedData.disease}
               onSubmit={handleDiseaseSubmit}
