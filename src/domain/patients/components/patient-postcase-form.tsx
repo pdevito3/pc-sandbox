@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { usePostCaseSideBar } from "../../postcase/postcase-sidebar";
 
 const patientFormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -28,7 +30,7 @@ export function PatientPostCaseForm({
   const {
     register: registerPatient,
     handleSubmit: handleSubmitPatient,
-    formState: { errors: patientErrors },
+    formState: { errors: patientErrors, isValid },
   } = useForm<PatientFormData>({
     resolver: zodResolver(patientFormSchema),
     defaultValues: patientData,
@@ -37,6 +39,10 @@ export function PatientPostCaseForm({
   const onSubmitHandler = (patientData: PatientFormData) => {
     onSubmit({ patient: patientData });
   };
+  const { updateSideBarState } = usePostCaseSideBar();
+  React.useEffect(() => {
+    updateSideBarState("patient", isValid ? "valid" : "invalid");
+  }, [isValid]);
 
   return (
     <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800">

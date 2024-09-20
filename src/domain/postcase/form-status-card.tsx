@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
-type FormStatus = "valid" | "invalid" | "untouched";
+type FormStatus = "valid" | "invalid" | "unknown";
 
 interface FormStatusItem {
   title: string;
@@ -21,7 +21,9 @@ export function FormStatusCard({ items }: FormStatusCardProps) {
             <span
               className={twMerge(
                 "w-48",
-                item.status === "invalid" ? "text-rose-500" : "text-slate-700"
+                item.status === "invalid"
+                  ? "text-rose-500"
+                  : "text-slate-700 dark:text-slate-300"
               )}
             >
               {item.title}

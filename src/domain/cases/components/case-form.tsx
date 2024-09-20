@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { usePostCaseSideBar } from "../../postcase/postcase-sidebar";
 
 const caseFormSchema = z.object({
   conferenceName: z.string().min(1, "Conference name is required"),
@@ -21,7 +23,7 @@ export function CaseForm({ caseId, caseData, onSubmit }: CaseFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<CaseFormData>({
     resolver: zodResolver(caseFormSchema),
     defaultValues: caseData,
@@ -30,6 +32,11 @@ export function CaseForm({ caseId, caseData, onSubmit }: CaseFormProps) {
   const onSubmitHandler = (data: CaseFormData) => {
     onSubmit(data);
   };
+
+  const { updateSideBarState } = usePostCaseSideBar();
+  React.useEffect(() => {
+    updateSideBarState("case", isValid ? "valid" : "invalid");
+  }, [isValid]);
 
   return (
     <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800">

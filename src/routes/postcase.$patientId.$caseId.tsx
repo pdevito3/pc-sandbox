@@ -1,6 +1,5 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import toast from "react-hot-toast";
-import { FormStatusCard } from "../components/FormStatusCard";
 import { useCase } from "../domain/cases/apis/get-case";
 import { CaseForm, CaseFormData } from "../domain/cases/components/case-form";
 import { useDisease } from "../domain/diseases/apis/get-disease";
@@ -13,6 +12,7 @@ import {
   PatientFormData,
   PatientPostCaseForm,
 } from "../domain/patients/components/patient-postcase-form";
+import { FormStatusCard } from "../domain/postcase/form-status-card";
 
 export const Route = createFileRoute("/postcase/$patientId/$caseId")({
   component: PostCaseEditComponent,
